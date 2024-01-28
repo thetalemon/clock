@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
 
 function notifyMe() {
   if (!('Notification' in window)) {
@@ -17,10 +16,23 @@ function notifyMe() {
 }
 
 import { onMounted } from 'vue'
+import { format } from 'date-fns'
+import { ref } from 'vue'
+const getCurrentDate = () => {
+  const date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
+  return date
+}
+const currentDate = ref(getCurrentDate())
 
 onMounted(() => {
-  console.log('a')
   notifyMe()
+  setInterval(
+    () => {
+      currentDate.value = getCurrentDate()
+    },
+    // 1秒ごと
+    1000
+  )
 })
 
 const onClick = function () {
@@ -48,18 +60,21 @@ function clickStop() {
 
 <template>
   <header>
-    <button @click="onClick">test</button>
-    <button @click="clickStart">start</button>
-    <button @click="clickStop">stop</button>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
     </div>
   </header>
 
   <main>
-    <TheWelcome />
+    <div>
+      <button @click="onClick">test</button>
+      <button @click="clickStart">start</button>
+      <button @click="clickStop">stop</button>
+    </div>
+    <p>通知オンオフ</p>
+    <p>時報オンオフ</p>
+
+    {{ currentDate }}
   </main>
 </template>
 
@@ -68,20 +83,11 @@ header {
   line-height: 1.5;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
 @media (min-width: 1024px) {
   header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
   }
 
   header .wrapper {
