@@ -18,17 +18,23 @@ function notifyMe() {
 import { onMounted } from 'vue'
 import { format } from 'date-fns'
 import { ref } from 'vue'
+
 const getCurrentDate = () => {
-  const date = format(new Date(), 'yyyy-MM-dd hh:mm:ss')
+  const date = format(new Date(), 'yyyy-MM-dd')
+  return date
+}
+const getCurrentTime = () => {
+  const date = format(new Date(), 'hh:mm:ss')
   return date
 }
 const currentDate = ref(getCurrentDate())
+const currentTime = ref(getCurrentTime())
 
 onMounted(() => {
   notifyMe()
   setInterval(
     () => {
-      currentDate.value = getCurrentDate()
+      currentTime.value = getCurrentTime()
     },
     // 1秒ごと
     1000
@@ -59,11 +65,7 @@ function clickStop() {
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <header>ただの時計</header>
 
   <main>
     <div>
@@ -74,26 +76,27 @@ function clickStop() {
     <p>通知オンオフ</p>
     <p>時報オンオフ</p>
 
-    {{ currentDate }}
+    <p>{{ currentDate }}</p>
+    <p>{{ currentTime }}</p>
   </main>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 header {
   line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  padding: 16px 0;
+  border-radius: 12px;
+  background: #c9fffc;
 }
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  p {
+    text-align: center;
+    margin: 0.25rem 0;
   }
 }
 </style>
